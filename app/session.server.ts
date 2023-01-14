@@ -65,6 +65,7 @@ export async function requireUser(request: Request) {
 
 export async function requireAdminUser(request: Request) {
   const user = await requireUser(request);
+  // @ts-ignore
   if (user.email !== ENV.ADMIN_EMAIL) {
     throw await logout(request)
   }
