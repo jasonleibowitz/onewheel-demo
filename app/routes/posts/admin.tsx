@@ -4,13 +4,17 @@ import type { LoaderFunction } from '@remix-run/node';
 import { getPostListings } from "~/models/post.server";
 import { requireAdminUser } from "~/session.server";
 
+type LoaderData = {
+	posts: Awaited<ReturnType<typeof getPostListings>>
+}
+
 export const loader: LoaderFunction = async ({request}) => {
 	await requireAdminUser(request);
-	return json({ posts: await getPostListings()})
+	return json<LoaderData>({ posts: await getPostListings()})
 }
 
 export default function AdminRoute() {
-	const {posts} = useLoaderData();
+	const {posts} = useLoaderData() as LoaderData;
 
 	return (
 		<div className="max-auto max-w-4xl">
